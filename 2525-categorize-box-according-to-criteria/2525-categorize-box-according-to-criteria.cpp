@@ -1,7 +1,6 @@
 class Solution {
 public:
     string categorizeBox(int length, int width, int height, int mass) {
-        long long int vol;
         bool bulky=false, heavy=false;
         if(mass>=100){
             heavy=true;
@@ -10,6 +9,7 @@ public:
             bulky=true;
         }
         else{
+            long long int vol;
             vol=(long long int)length*(long long int)width*(long long int)height;
             if(vol>=1000000000){
                 bulky=true;
