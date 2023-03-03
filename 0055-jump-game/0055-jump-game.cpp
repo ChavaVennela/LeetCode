@@ -9,7 +9,7 @@ public:
             }
             else{
                 int j;
-                for(j=1; j<=nums[i]; j++){
+                for(j=nums[i]; j>=1; j--){
                     if(a[i+j]==1){
                         a[i]=1;
                         break;
