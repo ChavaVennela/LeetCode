@@ -1,9 +1,9 @@
 class Solution {
 public:
     int minJumps(vector<int>& arr) {
-        // if(arr.size()==1){
-        //     return 0;
-        // }
+        if(arr.size()==1){
+            return 0;
+        }
         unordered_map<int, vector<int>>a;
         int i;
         for(i=0; i<arr.size(); i++){
