@@ -10,24 +10,17 @@
  */
 class Solution {
 public:
-    ListNode* head1;
+    vector<ListNode*>track;
     Solution(ListNode* head) {
-        head1=head;
+        while(head){
+            track.push_back(head);
+            head=head->next;
+        }
     }
     
     int getRandom() {
-        double scope=1.0;
-        int val1=0;
-        ListNode* curr=head1;
-        while(curr!=NULL){
-            double ran=((double)random()/(double)RAND_MAX);
-            if(ran<1.0/scope){
-                val1=curr->val;
-            }
-            scope++;
-            curr=curr->next;
-        }
-        return val1;
+        int temp=rand()%track.size();
+        return track[temp]->val;
     }
 };
 
