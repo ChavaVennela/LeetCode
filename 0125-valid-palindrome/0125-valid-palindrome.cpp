@@ -1,23 +1,28 @@
 class Solution {
 public:
     bool isPalindrome(string s) {
-        string temp="";
-        for(int i=0; i<s.size(); i++){
-            if(s[i]>='a' && s[i]<='z'){
-                temp+=s[i];
+        int i=0, j=s.size()-1;
+        while(i<j){
+            while(!((s[i]>='a' && s[i]<='z') || (s[i]>='A' && s[i]<='Z') || (s[i]>='0' && s[i]<='9')) && i<j && i<s.size()){
+                i++;
             }
-            else if(s[i]>='A' && s[i]<='Z'){
-                temp+=(s[i]+32);
+            while(!((s[j]>='a' && s[j]<='z') || (s[j]>='A' && s[j]<='Z') || (s[j]>='0' && s[j]<='9')) && i<j && j>=0){
+                j--;
             }
-            else if(s[i]>='0' && s[i]<='9'){
-                temp+=s[i];
+            if((s[i]>='A' && s[i]<='Z')){
+                s[i]=s[i]+32;
+            }
+            if((s[j]>='A' && s[j]<='Z')){
+                s[j]=s[j]+32;
+            }
+            if(s[i]!=s[j]){
+                return false;
+            }
+            else{
+                i++;
+                j--;
             }
         }
-        string a=temp;
-        reverse(a.begin(), a.end());
-        if(a==temp){
-            return true;
-        }
-        return false;
+        return true;
     }
 };
