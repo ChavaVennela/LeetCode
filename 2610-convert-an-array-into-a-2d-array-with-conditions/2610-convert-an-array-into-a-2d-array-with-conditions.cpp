@@ -2,21 +2,15 @@ class Solution {
 public:
     vector<vector<int>> findMatrix(vector<int>& nums) {
         vector<vector<int>>ans;
-        int count=1;
-        while(count==1){
-            unordered_set<int>a;
-            vector<int>temp;
-            count=0;
-            for(int i=0; i<nums.size(); i++){
-                if(nums[i]!=0 && a.find(nums[i])==a.end()){
-                    a.insert(nums[i]);
-                    temp.push_back(nums[i]);
-                    nums[i]=0;
-                    count=1;
-                }
+        int count=0;
+        unordered_map<int, int>a;
+        for(int i=0; i<nums.size(); i++){
+            a[nums[i]]++;
+            if(ans.size()<a[nums[i]]){
+                ans.push_back({nums[i]});
             }
-            if(temp.size()>0){
-                ans.push_back(temp);
+            else{
+                ans[a[nums[i]]-1].push_back(nums[i]);
             }
         }
         return ans;
