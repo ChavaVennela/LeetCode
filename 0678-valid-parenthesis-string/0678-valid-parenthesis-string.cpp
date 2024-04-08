@@ -1,32 +1,43 @@
 class Solution {
-public: 
-    bool checkValidString(string s) {
-        vector<vector<int>> memo(s.size(), vector<int>(s.size(), -1));
-        return isValidString(0, 0, s, memo);
+public:
+    map<pair<int, int>, bool>a;
+    bool valid(string s, int idx, int count){
+        if(a.find({idx, count})!=a.end()){
+            return a[{idx, count}];
+        }
+        if(idx==s.size()){
+            if(count!=0){
+                return false;
+            }
+            return true;
+        }
+        if(s[idx]=='('){
+            a[{idx, count}]=valid(s, idx+1, count+1);
+            count++;
+            return a[{idx, count-1}];
+        }
+        else if(s[idx]==')'){
+            if(count>0){
+                a[{idx, count}]=valid(s, idx+1, count-1);
+                count--;
+                return a[{idx, count+1}];
+            }
+            else{
+                a[{idx, count}]=false;
+                return false;
+            }
+        }
+        else{
+            if(count==0){
+                a[{idx, count}]=valid(s, idx+1, count) | valid(s, idx+1, count+1);
+            }
+            else{
+                a[{idx, count}]=valid(s, idx+1, count) | valid(s, idx+1, count+1) | valid(s, idx+1, count-1);
+            }
+            return a[{idx, count}];
+        }
     }
-private: 
-    bool isValidString(int index, int openCount,
-        const string & str, vector < vector < int >> & memo) {
-        if (index == str.size()) {
-            return (openCount == 0);
-        }
-        if (memo[index][openCount] != -1) {
-            return memo[index][openCount];
-        }
-        bool isValid = false;
-        if (str[index] == '*') {
-            isValid |= isValidString(index + 1, openCount + 1, str, memo);
-            if (openCount) {
-                isValid |= isValidString(index + 1, openCount - 1, str, memo);
-            }
-            isValid |= isValidString(index + 1, openCount, str, memo);
-        } else {
-            if (str[index] == '(') {
-                isValid = isValidString(index + 1, openCount + 1, str, memo); 
-            } else if (openCount) {
-                isValid = isValidString(index + 1, openCount - 1, str, memo); 
-            }
-        }
-        return memo[index][openCount] = isValid;
+    bool checkValidString(string s) {
+        return valid(s, 0, 0);
     }
 };
