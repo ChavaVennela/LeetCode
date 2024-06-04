@@ -1,7 +1,7 @@
 class Solution {
 public:
     int longestPalindrome(string s) {
-        map<char, int>a;
+        unordered_map<char, int>a;
         for(int i=0; i<s.size(); i++){
             a[s[i]]++;
         }
