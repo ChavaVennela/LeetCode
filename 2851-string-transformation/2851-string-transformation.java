@@ -1,83 +1,90 @@
 class Solution {
-    private static final int M = 1000000007;
+    private static final int MOD = 1000000007;
 
-    private int add(int x, int y) {
-        if ((x += y) >= M) {
-            x -= M;
+    // Adds two integers with modulo operation
+    private int modAdd(int a, int b) {
+        if ((a += b) >= MOD) {
+            a -= MOD;
         }
-        return x;
+        return a;
     }
 
-    private int mul(long x, long y) {
-        return (int) (x * y % M);
+    // Multiplies two long values with modulo operation
+    private int modMul(long a, long b) {
+        return (int) (a * b % MOD);
     }
 
-    private int[] getZ(String s) {
-        int n = s.length();
-        int[] z = new int[n];
-        for (int i = 1, left = 0, right = 0; i < n; ++i) {
-            if (i <= right && z[i - left] <= right - i) {
-                z[i] = z[i - left];
+    // Calculates Z-array for a given string
+    private int[] calculateZArray(String str) {
+        int len = str.length();
+        int[] zArray = new int[len];
+        for (int i = 1, left = 0, right = 0; i < len; ++i) {
+            if (i <= right && zArray[i - left] <= right - i) {
+                zArray[i] = zArray[i - left];
             } else {
-                int z_i = Math.max(0, right - i + 1);
-                while (i + z_i < n && s.charAt(i + z_i) == s.charAt(z_i)) {
-                    z_i++;
+                int zLen = Math.max(0, right - i + 1);
+                while (i + zLen < len && str.charAt(i + zLen) == str.charAt(zLen)) {
+                    zLen++;
                 }
-                z[i] = z_i;
+                zArray[i] = zLen;
             }
-            if (i + z[i] - 1 > right) {
+            if (i + zArray[i] - 1 > right) {
                 left = i;
-                right = i + z[i] - 1;
+                right = i + zArray[i] - 1;
             }
         }
-        return z;
+        return zArray;
     }
 
-    private int[][] matrixMultiply(int[][] a, int[][] b) {
-        int m = a.length, n = a[0].length, p = b[0].length;
-        int[][] r = new int[m][p];
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < p; ++j) {
-                for (int k = 0; k < n; ++k) {
-                    r[i][j] = add(r[i][j], mul(a[i][k], b[k][j]));
+    // Multiplies two matrices with modulo operation
+    private int[][] modMatrixMultiply(int[][] matA, int[][] matB) {
+        int rowsA = matA.length, colsA = matA[0].length, colsB = matB[0].length;
+        int[][] result = new int[rowsA][colsB];
+        for (int i = 0; i < rowsA; ++i) {
+            for (int j = 0; j < colsB; ++j) {
+                for (int k = 0; k < colsA; ++k) {
+                    result[i][j] = modAdd(result[i][j], modMul(matA[i][k], matB[k][j]));
                 }
-            }
-        }
-        return r;
-    }
-
-    private int[][] matrixPower(int[][] a, long y) {
-        int n = a.length;
-        int[][] r = new int[n][n];
-        for (int i = 0; i < n; ++i) {
-            r[i][i] = 1;
-        }
-        int[][] x = new int[n][n];
-        for (int i = 0; i < n; ++i) {
-            System.arraycopy(a[i], 0, x[i], 0, n);
-        }
-        while (y > 0) {
-            if ((y & 1) == 1) {
-                r = matrixMultiply(r, x);
-            }
-            x = matrixMultiply(x, x);
-            y >>= 1;
-        }
-        return r;
-    }
-
-    public int numberOfWays(String s, String t, long k) {
-        int n = s.length();
-        int[] dp = matrixPower(new int[][]{{0, 1}, {n - 1, n - 2}}, k)[0];
-        s += t + t;
-        int[] z = getZ(s);
-        int m = n + n;
-        int result = 0;
-        for (int i = n; i < m; ++i) {
-            if (z[i] >= n) {
-                result = add(result, dp[i - n == 0 ? 0 : 1]);
             }
         }
         return result;
+    }
+
+    // Computes matrix exponentiation with modulo
+    private int[][] modMatrixPower(int[][] mat, long exponent) {
+        int n = mat.length;
+        int[][] identity = new int[n][n];
+        for (int i = 0; i < n; ++i) {
+            identity[i][i] = 1;
+        }
+        int[][] baseMatrix = new int[n][n];
+        for (int i = 0; i < n; ++i) {
+            System.arraycopy(mat[i], 0, baseMatrix[i], 0, n);
+        }
+        while (exponent > 0) {
+            if ((exponent & 1) == 1) {
+                identity = modMatrixMultiply(identity, baseMatrix);
+            }
+            baseMatrix = modMatrixMultiply(baseMatrix, baseMatrix);
+            exponent >>= 1;
+        }
+        return identity;
+    }
+
+    // Finds the number of ways to transform string `s` into `t` using `k` operations
+    public int numberOfWays(String s, String t, long k) {
+        int n = s.length();
+        int[] dp = modMatrixPower(new int[][]{{0, 1}, {n - 1, n - 2}}, k)[0];
+        s += t + t;  // Concatenate `t` twice to `s` for cyclic rotation
+        int[] zArray = calculateZArray(s);
+        int maxLen = n + n;
+        int totalWays = 0;
+
+        for (int i = n; i < maxLen; ++i) {
+            if (zArray[i] >= n) {
+                totalWays = modAdd(totalWays, dp[i - n == 0 ? 0 : 1]);
+            }
+        }
+        return totalWays;
     }
 }
