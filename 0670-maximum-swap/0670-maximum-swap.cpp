@@ -1,18 +1,22 @@
 class Solution {
 public:
     int maximumSwap(int num) {
-        string numStr = to_string(num);
-        int n = numStr.size();
-        vector<int> lastSeen(10,-1);
-        for (int i = 0; i < n; ++i) {
-            lastSeen[numStr[i] - '0'] = i;
-        }
-        for (int i = 0; i < n; ++i) {
-            for (int d = 9; d > numStr[i] - '0'; --d) {
-                if (lastSeen[d] > i) {
-                    swap(numStr[i], numStr[lastSeen[d]]);
-                    return stoi(numStr);
+        string s=to_string(num);
+        string s1=s;
+        sort(s1.begin(), s1.end());
+        reverse(s1.begin(), s1.end());
+        char temp='a';
+        for(int i=0; i<s.size(); i++){
+            if(s1[i]!=s[i]){
+                temp=s[i];
+                s[i]=s1[i];
+                for(int j=s.size()-1; j>=0; j--){
+                    if(s[j]==s[i]){
+                        s[j]=temp;
+                        break;
+                    }
                 }
+                return stoi(s);
             }
         }
         return num;
