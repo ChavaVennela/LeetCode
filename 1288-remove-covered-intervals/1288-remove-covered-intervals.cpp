@@ -11,8 +11,6 @@ public:
         int count=1, lastfirst, lastlast;
         lastfirst=intervals[0][0];
         lastlast=intervals[0][1];
-        vector<vector<int>>temp;
-        temp.push_back(intervals[0]);
         for(int i=1; i<intervals.size(); i++){
             if(intervals[i][0]>=lastfirst && intervals[i][1]<=lastlast){
                 continue;
