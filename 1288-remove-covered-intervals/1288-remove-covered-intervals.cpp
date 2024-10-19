@@ -8,14 +8,19 @@ public:
     }
     int removeCoveredIntervals(vector<vector<int>>& intervals) {
         sort(intervals.begin(), intervals.end(), cmp);
+        int count=1, lastfirst, lastlast;
+        lastfirst=intervals[0][0];
+        lastlast=intervals[0][1];
         vector<vector<int>>temp;
         temp.push_back(intervals[0]);
         for(int i=1; i<intervals.size(); i++){
-            if(intervals[i][0]>=temp[temp.size()-1][0] && intervals[i][1]<=temp[temp.size()-1][1]){
+            if(intervals[i][0]>=lastfirst && intervals[i][1]<=lastlast){
                 continue;
             }
-            temp.push_back(intervals[i]);
+            count++;
+            lastfirst=intervals[i][0];
+            lastlast=intervals[i][1];
         }
-        return temp.size();
+        return count;
     }
 };
