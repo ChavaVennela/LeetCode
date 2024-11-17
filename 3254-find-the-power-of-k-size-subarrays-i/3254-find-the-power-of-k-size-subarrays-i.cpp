@@ -1,29 +1,22 @@
 class Solution {
 public:
     vector<int> resultsArray(vector<int>& nums, int k) {
-        int length = nums.size();
-        vector<int> result(length - k + 1);
-
-        for (int start = 0; start <= length - k; start++) {
-            bool isConsecutiveAndSorted = true;
-
-            // Check if the current subarray is sorted and consecutive
-            for (int index = start; index < start + k - 1; index++) {
-                if (nums[index + 1] != nums[index] + 1) {
-                    isConsecutiveAndSorted = false;
+        if(k==1){
+            return nums;
+        }
+        vector<int>ans;
+        for(int i=0; i<nums.size()-k+1; i++){
+            ans.push_back(-1);
+            for(int j=i+1; j<i+k && j<nums.size(); j++){
+                if(nums[j]==nums[j-1]+1){
+                    ans[i]=max(ans[i], nums[j]);
+                }
+                else{
+                    ans[i]=-1;
                     break;
                 }
             }
-
-            // If valid, take the maximum of the subarray, otherwise set to -1
-            if (isConsecutiveAndSorted) {
-                // Maximum element of this subarray
-                result[start] = nums[start + k - 1];
-            } else {
-                result[start] = -1;
-            }
         }
-
-        return result;
+        return ans;
     }
 };
